@@ -8,7 +8,9 @@ import io.javalin.Javalin;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 
@@ -55,6 +57,14 @@ public class JAktor extends Aktor {
 
     public String rollbackAdressURL() throws UnknownHostException {
         InetAddress ip=null;
+        String ipString = null;
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            ipString = socket.getLocalAddress().getHostAddress();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
         String hostname;
         try {
             ip = InetAddress.getLocalHost();
@@ -67,8 +77,8 @@ public class JAktor extends Aktor {
             e.printStackTrace();
         }
 
+        return "http://"+ ipString+":"+getPortFromURL(this.Address)+"/";
 
-        return "http://"+ ip.getHostAddress()+":"+getPortFromURL(this.Address)+"/";
     }
 
     public String Address = "";
@@ -90,6 +100,11 @@ class Serv extends Thread {
         app = Javalin.create().start(aktor.getPortFromURL(aktor.Address));
         System.out.println("STARTING JAVALIN on"+aktor.getPortFromURL(aktor.Address));
         app.post("/", ctx -> aktor.receive(ctx.bodyAsBytes()));
+        try {
+               System.out.println("Rollback address=>"+aktor.rollbackAdressURL());
+        } catch (UnknownHostException e) {
+           e.printStackTrace();
+        }
     }
 
     public void setAktor(JAktor inp) {
