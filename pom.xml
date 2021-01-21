@@ -6,7 +6,7 @@
 
     <groupId>eu.roland</groupId>
     <artifactId>JAKtor</artifactId>
-    <version>1.9-ROLLBACK</version>
+    <version>2.0-ROLLBACK</version>
     <build>
         <plugins>
             <plugin>
@@ -20,6 +20,14 @@
         </plugins>
     </build>
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.54.Final</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
